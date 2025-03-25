@@ -1,8 +1,3 @@
-pip==21
-setuptools==65.5.0
-wheel==0.38.0
-numpy==1.19.2
-jupyterlab==3.0.14
 hydra-core==1.1.0
 hydra-submitit-launcher==1.1.5
 ipdb==0.13.9
@@ -10,6 +5,7 @@ seaborn
 imageio==2.10.1
 moviepy==1.0.3
 opencv-python==4.5.5.64
+gym==0.20.0
 wandb==0.12.15
 imageio==2.10.1
 setproctitle==1.2.3

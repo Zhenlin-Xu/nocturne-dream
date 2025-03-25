@@ -76,7 +76,7 @@ def _parse_object_state(
         "goalPosition": {
             "x": final_state.center_x,
             "y": final_state.center_y
-        }
+        },
     }
 
 
@@ -109,6 +109,7 @@ def _init_object(track: scenario_pb2.Track) -> Optional[Dict[str, Any]]:
 
     obj = _parse_object_state(track.states, track.states[final_valid_index])
     obj["type"] = _WAYMO_OBJECT_STR[track.object_type]
+    obj["track_id"] = track.id # NEWLY ADDED
     return obj
 
 
@@ -119,7 +120,7 @@ def _init_road(map_feature: map_pb2.MapFeature) -> Optional[Dict[str, Any]]:
         p = getattr(map_feature,
                     map_feature.WhichOneof("feature_data")).position
         geometry = [{"x": p.x, "y": p.y}]
-    elif feature != 'crosswalk' and feature != 'speed_bump':
+    elif feature != 'crosswalk' and feature != 'speed_bump' and feature != 'driveway': # NEWLY ADDED
         geometry = [{
             "x": p.x,
             "y": p.y
@@ -131,6 +132,7 @@ def _init_road(map_feature: map_pb2.MapFeature) -> Optional[Dict[str, Any]]:
             "y": p.y
         } for p in getattr(map_feature, map_feature.WhichOneof(
             "feature_data")).polygon]
+    
     return {
         "geometry": geometry,
         "type": map_feature.WhichOneof("feature_data"),
@@ -183,9 +185,8 @@ def waymo_to_scenario(scenario_path: str,
             tl_dict[id]['time_index'].append(i)
         i += 1
 
-    # Construct the object states
     objects = []
-    for track in protobuf.tracks:
+    for index, track in enumerate(protobuf.tracks):
         obj = _init_object(track)
         if obj is not None:
             objects.append(obj)
@@ -201,7 +202,9 @@ def waymo_to_scenario(scenario_path: str,
         "name": scenario_path.split('/')[-1],
         "objects": objects,
         "roads": roads,
-        "tl_states": tl_dict
+        "tl_states": tl_dict,
+        "sdc_track_index": protobuf.sdc_track_index,    # NEWLY ADDED
+        "num_track": len(protobuf.tracks)               # NEWLY ADDED,
     }
     with open(scenario_path, "w") as f:
         json.dump(scenario, f)

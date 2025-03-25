@@ -5,6 +5,7 @@ dependencies:
   - python=3.8
   - pip=21.1.3
   - numpy=1.19.2
+  # - wheel==0.38.0
   - jupyterlab=3.0.14
   - pip:
     - hydra-core==1.1.0
@@ -14,7 +15,7 @@ dependencies:
     - imageio==2.10.1
     - moviepy==1.0.3
     - opencv-python==4.5.5.64
-    - gym==0.20.0
+    # - gym==0.21.0
     - wandb==0.12.15
     - imageio==2.10.1
     - setproctitle==1.2.3

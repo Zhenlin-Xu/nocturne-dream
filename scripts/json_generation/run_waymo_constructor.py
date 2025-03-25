@@ -85,6 +85,7 @@ def main():
             (VALID_DATA_PATH,
              PROCESSED_VALID_NO_TL if args.no_tl else PROCESSED_VALID))
 
+    print(folders_to_convert)
     for folder_path, output_dir in folders_to_convert:
         if args.num > 1 or args.all_files:
             files = list(Path(folder_path).glob('*tfrecord*'))
